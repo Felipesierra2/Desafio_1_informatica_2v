@@ -3,10 +3,10 @@
 
 #include <cstdint>
 
-//Rotación a la izquierda de un byte
+//Desplazamos a la izquierda los byte
 uint8_t rotIz(uint8_t b, int n);
 
-//Rotación a la derecha de un byte
+//Desplazamos a la derecha los bytes
 uint8_t rotDe(uint8_t b, int n);
 
 //XOR simple con clave
@@ -17,5 +17,8 @@ uint8_t cifrarBytes(uint8_t b,uint8_t n,uint8_t k);
 
 //Funcion para decifrar los bytes
 uint8_t decifrarBytes(uint8_t b,uint8_t n,uint8_t k);
+
+//Funcion descompresion RLE
+uint8_t descomprimirRLE(const uint8_t *buffer,int tamañoEntrada,int tamañoSalida);
 
 #endif // CRYPTO_H
