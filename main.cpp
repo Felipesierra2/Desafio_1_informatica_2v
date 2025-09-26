@@ -22,10 +22,10 @@ int main()
     uint8_t z = x ^ k;
     uint8_t bC = cifrarBytes(b, n, k);
     uint8_t bD = decifrarBytes(bC,n,k);
-    uint8_t buffer[10] = {4, 'A', 3, 'B', 2, 'C', 1, 'D', 2, 'A'};
-    int tamañoEntrada = 10;
-    int tamañoSalida;
-    uint8_t *dC = descomprimirRLE(buffer,tamañoEntrada,tamañoSalida);
+    uint8_t buffer[] = {3, 'A', 3, 'B', 4, 'C', 2, 'D', 2, 'A'};
+    int longitudE = sizeof(buffer) / sizeof(buffer[0]);
+    int longitudS = 0;
+    uint8_t *mD = descomprimirRLE(buffer,longitudE,longitudS);
 
     cout << "Original: ";
     printByte(b);
@@ -59,9 +59,12 @@ int main()
     printByte(bD);
     cout << " (" << (int)bD << ")" << endl;
 
-    if (b == bD){
-        cout << "Melo ya está códificando y decódificando" << endl;
+    for (int i = 0; i < longitudS;i++){
+        cout << mD[i];
     }
+
+    delete[] mD;
+    mD = nullptr;
 
     return 0;
 }

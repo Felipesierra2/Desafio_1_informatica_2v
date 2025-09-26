@@ -19,6 +19,6 @@ uint8_t cifrarBytes(uint8_t b,uint8_t n,uint8_t k);
 uint8_t decifrarBytes(uint8_t b,uint8_t n,uint8_t k);
 
 //Funcion descompresion RLE
-uint8_t descomprimirRLE(const uint8_t *buffer,int tamañoEntrada,int tamañoSalida);
+uint8_t *descomprimirRLE(const uint8_t *buffer,int longitudE,int &longitudS);
 
 #endif // CRYPTO_H
