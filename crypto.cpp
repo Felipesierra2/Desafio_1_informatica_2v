@@ -1,7 +1,100 @@
 #include "crypto.h"
 #include <cctype>
 #include <cstring>
+#include <iostream>
+#include <fstream>
 
+using namespace std;
+
+
+/*Esto lo hace la función validarEntero, que evita que el usuario ingrese cualquier dato
+y el sistea arroje un error*/
+int  validarEntero(){
+    int num;
+    cout << "Ingrese la cantidad de archivos a operar: ";
+    while(true){
+        cin >> num;
+        if (!cin || num < 1){
+            cout << "Error: El valor ingresado no es un entero mayor a 0. " << endl;
+            cin.clear();
+            cin.ignore(1000,'\n');
+        }else{
+            return num;
+        }
+    }
+}
+
+
+//Funcion que llamamos para leer el archivo Encriptado
+char *leerEncriptado(const char* arEncriptado, int *tamEncriptado){
+    ifstream archivo(arEncriptado, std::ios::binary | std::ios::ate);
+
+    //Validamos si existe el archivo
+    if (!archivo.is_open()){
+        *tamEncriptado = 0;
+        return nullptr;
+    }
+
+    //Tamaño del archivo
+    streamsize tamaAr = archivo.tellg();
+    *tamEncriptado = tamaAr;
+
+    //Verificamos si hay contenido en el archivo
+    if (tamaAr <= 0){
+        *tamEncriptado = 0;
+        return nullptr;
+    }
+
+    //Regresamos al inicio del archivo para leer
+    archivo.seekg(0, std::ios::beg);
+
+    //Reservamos memoria para el contenido encriptado
+    char *contenidoEn = new char[tamaAr];
+
+    //Leemos el contenido
+    archivo.read(contenidoEn, tamaAr);
+
+    archivo.close();
+
+    return contenidoEn;
+}
+
+char *leerPista(const char* arPista, int *tamPista){
+    ifstream archivo(arPista, std::ios::in | std::ios::ate);
+
+    //Validamos si existe el archivo
+    if (!archivo.is_open()){
+        *tamPista = 0;
+        return nullptr;
+    }
+
+    //Tamaño del archivo
+    streamsize tamaAr = archivo.tellg();
+    *tamPista = tamaAr;
+
+    //Verificamos si hay contenido en el archivo
+    if (tamaAr <= 0){
+        *tamPista = 0;
+        return nullptr;
+    }
+
+    //Regresamos al inicio
+    archivo.seekg(0, std::ios::beg);
+
+    //Reservamos memoria
+    char *contenidoPis = new char[tamaAr + 1];
+
+    //Asignamos el final de la lista
+    contenidoPis[tamaAr] = '\0';
+
+    //Leemos el contenido
+    archivo.read(contenidoPis, tamaAr);
+
+    archivo.close();
+
+    return contenidoPis;
+
+}
 
 //Funcion auxiliar, para recontruir la cadane
 void concatenar(char*& resultado, const char* nueva) {

@@ -3,6 +3,14 @@
 
 #include <cstdint>
 
+//Funcion que revisa que verifica que el usuario haya ingresado un entero
+int  validarEntero();
+
+//Función que extrae el archivo encriptado
+char *leerEncriptado(const char* arEncriptado, int *tamEncriptado);
+
+char *leerPista(const char *arPista, int *tamPista);
+
 //Desplazamos a la izquierda los byte
 uint8_t rotIz(uint8_t b, int n);
 
