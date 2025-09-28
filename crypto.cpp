@@ -1,4 +1,18 @@
 #include "crypto.h"
+#include <cctype>
+#include <cstring>
+
+
+//Funcion auxiliar, para recontruir la cadane
+void concatenar(char*& resultado, const char* nueva) {
+    int len1 = strlen(resultado);
+    int len2 = strlen(nueva);
+    char* nuevo = new char[len1 + len2 + 1];
+    strcpy(nuevo, resultado);
+    strcpy(nuevo + len1, nueva);
+    delete[] resultado;
+    resultado = nuevo;
+}
 
 uint8_t rotIz(uint8_t b, int n) {
     uint8_t izqIz = b << n; //Desplazamos los bits a la izquierda
@@ -46,7 +60,7 @@ uint8_t *descomprimirRLE(const uint8_t* buffer,int longitudE,int &longitudS){
         uint8_t cont = buffer[i];
         uint8_t symbol = buffer[i + 1];
 
-        //Ciclo interno para imprimir y guardar la cantidad de letrar en el arreglo dinamico
+        //Ciclo interno guarda la cantidad de letras en el arreglo
         for (int j = 0; j < cont; j++){
             bufferSalida[pos++] = symbol;
         }
@@ -55,6 +69,73 @@ uint8_t *descomprimirRLE(const uint8_t* buffer,int longitudE,int &longitudS){
     return bufferSalida;
 }
 
+// Función principal: descomprimir LZ78
+char* descomprimirLZ78(const char* entrada) {
+    int capacidad = 1000; // capacidad inicial del diccionario
+    char** diccionario = new char*[capacidad];
+
+    // entrada especial "" en índice 0
+    diccionario[0] = new char[1];
+    diccionario[0][0] = '\0';
+    int sigt = 1; // manejar posición del dicciónario
+
+    // resultado inicial vacío
+    char* resultado = new char[1];
+    resultado[0] = '\0';
+
+    int i = 0;
+    while (entrada[i] != '\0') {
+        //leemos el indice
+        int indice = 0;
+        while (isdigit(entrada[i])) {
+            indice = indice * 10 + (entrada[i] - '0');
+            i++;//Aumentamos i para pasar al caracter
+        }
+
+        // leemos el carácter y aumetanmos i para dejarlo en la posición del indice
+        char c = entrada[i];
+        i++;
+
+        //construir nueva cadena: dic[indice] + c
+
+        //Revisamos en el diccionario si hay un caracter o si esta vació
+        //para el indice seleccionado
+        int len = strlen(diccionario[indice]);
+
+
+        //Aseguramos 2 espacios: el digito y '\n' para fijar el final de la cadena
+        char* nueva = new char[len + 2];
+        strcpy(nueva, diccionario[indice]);
+        nueva[len] = c;
+        nueva[len + 1] = '\0';
+
+        // guardamos en diccionario
+        if (sigt >= capacidad) {
+            // redimensionar
+            int nuevaCap = capacidad * 2;
+            char** nuevoDic = new char*[nuevaCap];
+            for (int j = 0; j < capacidad; j++) {
+                nuevoDic[j] = diccionario[j];
+            }
+            delete[] diccionario;
+            diccionario = nuevoDic;
+            capacidad = nuevaCap;
+        }
+        diccionario[sigt] = nueva;
+        sigt++;
+
+        // añadimos al resultado
+        concatenar(resultado, nueva);
+    }
+
+    // limpiar memoria del diccionario (excepto resultado)
+    for (int j = 0; j < sigt; j++) {
+        delete[] diccionario[j];
+    }
+    delete[] diccionario;
+
+    return resultado;
+}
 
 
 

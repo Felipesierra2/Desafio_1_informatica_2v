@@ -27,6 +27,15 @@ int main()
     int longitudS = 0;
     uint8_t *mD = descomprimirRLE(buffer,longitudE,longitudS);
 
+
+    const char* comprimido = "0A0B1B2A3A4B"; // representa "ABAABABAABAB"
+    char* texto = descomprimirLZ78(comprimido);
+    std::cout << texto << std::endl;
+    delete[] texto;
+
+
+
+
     cout << "Original: ";
     printByte(b);
     cout << " (" << (int)b << ")" << endl;
